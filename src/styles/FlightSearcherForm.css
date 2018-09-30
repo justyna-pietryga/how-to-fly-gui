@@ -1,0 +1,15 @@
+.FlightSearcher{
+    margin-top: 2.5rem;
+}
+
+.submit_button{
+    margin-top: 3rem;
+    width: 6rem;
+    background: #454d98;
+    border-color: #454d98;
+}
+
+.submit_button:hover{
+    background: #5761bf;
+    border-color: #5761bf;;
+}
