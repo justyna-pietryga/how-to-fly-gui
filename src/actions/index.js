@@ -17,3 +17,8 @@ export const setFirstStep = (payload) => ({
     type: 'NEXT_STEP_COMPLETED',
     payload
 });
+
+export const setReservations = (payload) => ({
+   type: 'SET_RESERVED_PLACES_FOR_FLIGHT_LEG',
+   payload
+});

@@ -1,5 +1,42 @@
-.choiceFlightContainer{
-    width: 50rem;
+.choiceFlightContainer {
+    /*width: 50rem;*/
     margin-top: 3rem;
     margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+.placeButton {
+    width: 1.8rem;
+    height: 1.7rem;
+    padding: 0;
+    color: black;
+    font-size: 0.5rem;
+    font-weight: 900;
+    border-color: transparent;
+}
+
+.back {
+    border-radius: 5px;
+    float: left;
+}
+
+.labelsInAirplane {
+    font-size: 0.6rem;
+    font-weight: bold;
+    text-align: center;
+    color: brown;
+    /*margin-left: 10rem;*/
+    /*margin-right: auto;*/
+}
+
+.airplane {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.oneAirplane {
+    padding: 0.2rem;
+    border: 1px solid #bababa;
+    border-radius: 5px;
 }
