@@ -4,6 +4,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {store} from '../store'
+import history from '.././history';
 import {Redirect} from 'react-router-dom'
 
 const styles = theme => ({
@@ -28,17 +29,18 @@ function getStepContent(step) {
     const endpoint = url.slice(21, url.length);
     switch (step) {
         case 0:
-            if(endpoint === '/reservation/setParameters') return '';
-            return <Redirect to="/reservation/setParameters"/>;
+            if(endpoint === '/reservation/set-parameters') return '';
+            return history.push("/reservation/set-parameters");
         case 1:
-            if(endpoint === '/reservation/chooseFlight') return '';
-            return <Redirect to="/reservation/chooseFlight"/>;
+            if(endpoint === '/reservation/choose-flight') return '';
+            return history.push("/reservation/choose-flight");
         case 2:
-            return 'Choose the sits';
+            if(endpoint === '/reservation/set-places') return '';
+            return history.push("/reservation/set-places");
         case 3:
             return 'Confirm the reservation';
         default:
-            return 'Uknown stepIndex';
+            return 'Unknown stepIndex';
     }
 }
 

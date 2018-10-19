@@ -21,7 +21,7 @@
 }
 
 .labelsInAirplane {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: bold;
     text-align: center;
     color: brown;
@@ -40,3 +40,21 @@
     border: 1px solid #bababa;
     border-radius: 5px;
 }
+
+.flightLegRowDetail{
+    display: flex;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+.flightLegColumnDetail{
+    display: flex;
+    flex-direction: column;
+    padding: 0.4rem;
+    margin-left: 1rem;
+}
+
+.myTable:hover {
+    cursor: pointer;
+}
+

@@ -1,14 +1,18 @@
-import { combineReducers } from "redux";
-import { cities } from "./cities";
-import { search } from "./search";
-import { flights } from "./flights";
-import { stepper } from "./stepper";
-import { reservations } from "./reservations";
+import {combineReducers} from "redux";
+import {cities} from "./cities";
+import {search} from "./search";
+import {flights} from "./flights";
+import {stepper} from "./stepper";
+import {reservations} from "./reservations";
+import {flightLegs} from "./flightLegs";
+import {reservedFlight} from "./reservedFlight"
 
 export default combineReducers({
     cities,
     search,
     flights,
     stepper,
-    reservations
+    flightLegs,
+    reservations,
+    reservedFlight
 });

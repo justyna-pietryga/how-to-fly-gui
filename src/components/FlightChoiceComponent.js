@@ -5,8 +5,9 @@ import {connect} from "react-redux";
 import '../styles/ChoiceFlightContainer.css'
 import {Table, Button} from 'antd';
 import moment from 'moment'
-import {setFirstStep, setReservations} from "../actions/index";
+import {setFirstStep, setReservations, setFlightToReserve, setPlacesToReserve} from "../actions/index";
 import {AirplanesComponent} from "./AirplanesComponent";
+import {FaCheck} from 'react-icons/fa'
 import $ from "jquery";
 
 const columns = [
@@ -16,6 +17,7 @@ const columns = [
     {title: 'Arrival Airport', dataIndex: 'arrivalAirport', key: 'arrivalAirport'},
     {title: 'Count of transfers', dataIndex: 'cot', key: 'cot'},
     {title: 'Price', dataIndex: 'price', key: 'price'},
+    {title: 'Choose me', dataIndex: 'check', key: 'check'},
 ];
 
 export class FlightChoiceComponent extends React.Component {
@@ -26,10 +28,10 @@ export class FlightChoiceComponent extends React.Component {
     }
 
     componentDidMount() {
-       this.getNotFreePlaces();
+        this.getNotFreePlaces();
     }
 
-    getNotFreePlaces(){
+    getNotFreePlaces() {
         let flightLegsIds = new Set();
         store.getState().flights.forEach(flight =>
             flight.flightLegs.forEach(flightLeg => flightLegsIds.add(flightLeg.id)));
@@ -52,6 +54,7 @@ export class FlightChoiceComponent extends React.Component {
     getRows() {
         let i = 0;
         const flights = store.getState().flights.map(flight => {
+            const id = flight.id;
             const flightLegs = flight.flightLegs;
             let description = flightLegs[0].departureAirport.city.name + '(' + flightLegs[0].departureAirport.code + ') ' + '->' +
                 flightLegs[0].arrivalAirport.city.name + '(' + flightLegs[0].arrivalAirport.code + ')';
@@ -66,6 +69,7 @@ export class FlightChoiceComponent extends React.Component {
             // console.log(description2.toString().replace(/,/g, '\n'));
             return {
                 key: i++,
+                id: id,
                 depTime: moment(flightLegs[0].departureTimeLocale.slice(0, 16)).format('DD.MM.YY hh:mm'),
                 arrivalTime: moment(flightLegs[flightLegs.length - 1].arrivalTimeUTC).format('DD.MM.YY hh:mm'),
                 departAirport: flightLegs[0].departureAirport.code + "(" + flightLegs[0].departureAirport.name + ")",
@@ -73,6 +77,7 @@ export class FlightChoiceComponent extends React.Component {
                 flightLegs[flightLegs.length - 1].arrivalAirport.name + ")",
                 cot: flightLegs.length - 1,
                 price: '100$',
+                check: this.props.chosenFlight === id ? <FaCheck color="green"/> : '',
                 description: <AirplanesComponent leg={i - 1} disabled={true} places={this.getPlaces()}/>
             }
         });
@@ -81,7 +86,7 @@ export class FlightChoiceComponent extends React.Component {
     }
 
     getPlaces() {
-        const list = store.getState().flights.map(flight => {
+        const list = this.props.flights.map(flight => {
             const flightLegs = flight.flightLegs;
             let sth = [];
             for (let i = 0; i < flightLegs.length; i++) {
@@ -96,11 +101,22 @@ export class FlightChoiceComponent extends React.Component {
     render() {
 
         return <div className="choiceFlightContainer">
-            <Table columns={this.getColumns()}
+            <Table className="myTable"
+                   columns={this.getColumns()}
                    expandedRowRender={record => record.description}
-                   dataSource={this.getRows()}/>
-            <Button type='neutral' onClick={() => this.props.setFirstStep(0)}>Back</Button>
-            <Button type='primary' onClick={() => this.props.setFirstStep(2)}>Next</Button>
+                   dataSource={this.getRows()}
+                   locale={{emptyText: 'No flights found'}}
+                   onRow={(record) => {
+                       return {
+                           onClick: () => {
+                               this.props.setFlightToReserve(record.id);
+                               // this.props.setPlacesToReserve([{id: 993, places: [21, 22]}, {id: 992, places: [23, 24]}]);
+                           },
+                       };
+                   }}
+            />
+            <Button style={{marginRight: 4}} type='neutral' onClick={() => this.props.setFirstStep(0)}>Back</Button>
+            <Button disabled={this.props.chosenFlight === -1} type='primary' onClick={() => this.props.setFirstStep(2)}>Next</Button>
         </div>;
 
     }
@@ -109,9 +125,12 @@ export class FlightChoiceComponent extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        cities: state.cities
+        cities: state.cities,
+        flights: state.flights,
+        chosenFlight: state.reservedFlight.chosenFlight,
+        chosenPlaces: state.reservedFlight.chosenPlaces
     }
 };
-const mapDispatchToProps = {setFirstStep, setReservations};
+const mapDispatchToProps = {setFirstStep, setReservations, setFlightToReserve, setPlacesToReserve};
 
 export default connect(mapStateToProps, mapDispatchToProps)(FlightChoiceComponent);

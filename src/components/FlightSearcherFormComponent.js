@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Form} from 'antd'
+import {Button, Form, InputNumber} from 'antd'
 import 'antd/dist/antd.css';
 import {store} from '../store'
 import {AutoCompleteComponent} from "./AutoCompleteComponent";
@@ -26,8 +26,8 @@ export class FlightSearcherFormComponent extends React.Component {
         super();
 
         this.state = {
-            departCity: '',
-            arrivalCity: ''
+            amountOfPassengers: 0,
+            amountOfChildren: 0,
         }
     }
 
@@ -43,6 +43,16 @@ export class FlightSearcherFormComponent extends React.Component {
         return store.getState().cities.filter(city => city.name === type)[0].id;
     };
 
+    setPassengers = (value) => {
+        this.setState({amountOfPassengers: value});
+        console.log(value);
+    };
+
+    setChildren = (value) => {
+        this.setState({amountOfChildren: value});
+        console.log(value);
+    };
+
     handleSubmit = (e) => {
 
         e.preventDefault();
@@ -50,7 +60,9 @@ export class FlightSearcherFormComponent extends React.Component {
         const arrivalCityId = this.getCityId(this.state.arrivalCity);
         console.log('depart -> arrival', departCityId + "->" + arrivalCityId);
 
-        this.props.actions.setSearchParameters({departCityId: departCityId, arrivalCityId: arrivalCityId});
+        this.props.actions.setSearchParameters({departCityId: departCityId, arrivalCityId: arrivalCityId,
+                                                amountOfPassengers: this.state.amountOfPassengers,
+                                                amountOfChildren: this.state.amountOfChildren});
         const path = 'http://localhost:8085/api/flights/search/departureId=' + departCityId + ',arrivalId=' + arrivalCityId;
 
         fetch(path)
@@ -92,6 +104,14 @@ export class FlightSearcherFormComponent extends React.Component {
                                                width={300}
                                                placeholder="Choose arrival city"
                                                setValue={this.handleArrivalCity}/>
+                    </FormItem>
+
+                    <FormItem {...formItemLayout} label="Amount of passengers">
+                        <InputNumber min={1} max={15} defaultValue={1} onChange={this.setPassengers} />
+                    </FormItem>
+
+                    <FormItem {...formItemLayout} label="Amount of children (min 1 adult)">
+                        <InputNumber min={0} max={this.state.amountOfPassengers - 1} defaultValue={0} onChange={this.setChildren} />
                     </FormItem>
 
                     <FormItem
