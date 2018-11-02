@@ -1,9 +1,8 @@
 import React from 'react';
-import {store} from '../store'
-import history from '.././history';
-import {Redirect} from 'react-router-dom'
 import {connect} from "react-redux";
 import {AirplanesComponent} from "./AirplanesComponent";
+import {setFirstStep} from "../actions/index";
+import {Button} from "antd";
 
 export class PlacesChoiceComponent extends React.Component {
     constructor() {
@@ -45,6 +44,9 @@ export class PlacesChoiceComponent extends React.Component {
         return (
             <div>
                 <AirplanesComponent leg={0} disabled={false} places={this.getPlaces()}/>
+
+                <Button style={{marginRight: 4}} type='neutral' onClick={() => this.props.setFirstStep(1)}>Back</Button>
+                <Button disabled={this.props.chosenFlight === -1} type='primary' onClick={() => this.props.setFirstStep(3)}>Next</Button>
             </div>
         );
     }
@@ -56,6 +58,6 @@ const mapStateToProps = (state) => {
         flights: state.flights,
     }
 };
-const mapDispatchToProps = {};
+const mapDispatchToProps = {setFirstStep};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlacesChoiceComponent);

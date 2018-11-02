@@ -6,14 +6,15 @@ import {Button} from 'antd';
 import {connect} from "react-redux";
 import {reservations} from "../reducers/reservations";
 import {PlaceButton, PlaceButtonComponent} from "./PlaceButton";
+import Typography from '@material-ui/core/Typography';
 
 export class AirplaneComponent extends React.Component {
 
     constructor() {
         super();
         this.state = {
-         free : '#99e286',
-         notFree : '#858482'
+            free: '#99e286',
+            notFree: '#858482'
         }
     }
 
@@ -65,58 +66,76 @@ export class AirplaneComponent extends React.Component {
             for (let i = 0; i < placesPerRow; i++) {
                 const place = this.props.places[flight][j].places[i];
                 this.isThisPlaceFree(notFreePlaces, place) ?
-                    row1[i] = {place: place, color: this.state.free} : row1[i] = {place: place, color: this.state.notFree};
+                    row1[i] = {place: place, color: this.state.free} : row1[i] = {
+                        place: place,
+                        color: this.state.notFree
+                    };
             }
             for (let i = placesPerRow; i < placesPerRow * 2; i++) {
                 const place = this.props.places[flight][j].places[i];
                 this.isThisPlaceFree(notFreePlaces, place) ?
-                    row2[i] = {place: place, color: this.state.free} : row2[i] = {place: place, color: this.state.notFree};
+                    row2[i] = {place: place, color: this.state.free} : row2[i] = {
+                        place: place,
+                        color: this.state.notFree
+                    };
             }
             for (let i = placesPerRow * 2; i < placesPerRow * 3; i++) {
                 const place = this.props.places[flight][j].places[i];
                 this.isThisPlaceFree(notFreePlaces, place) ?
-                    row3[i] = {place: place, color: this.state.free} : row3[i] = {place: place, color: this.state.notFree};
+                    row3[i] = {place: place, color: this.state.free} : row3[i] = {
+                        place: place,
+                        color: this.state.notFree
+                    };
             }
             for (let i = placesPerRow * 3; i < placesPerRow * 4; i++) {
                 const place = this.props.places[flight][j].places[i];
                 this.isThisPlaceFree(notFreePlaces, place) ?
-                    row4[i] = {place: place, color: this.state.free} : row4[i] = {place: place, color: this.state.notFree};
+                    row4[i] = {place: place, color: this.state.free} : row4[i] = {
+                        place: place,
+                        color: this.state.notFree
+                    };
             }
         }
 
-        return <div className="oneAirplane">
-            <div className="flightLegRowDetail">
-                <div className="flightLegColumnDetail">
-                    <div>{flightLeg.departureAirport.code}</div>
-                    <div>{flightLeg.departureAirport.name}</div>
-                    <div>{flightLeg.departureTimeLocale}</div>
+        return <div style={{display: "flex", alignItems: 'center'}}>
+            <div className="oneAirplane">
+                <div className="flightLegRowDetail">
+                    <div className="flightLegColumnDetail">
+                        <div>{flightLeg.departureAirport.code}</div>
+                        <div>{flightLeg.departureAirport.name}</div>
+                        <div>{flightLeg.departureTimeLocale}</div>
+                    </div>
+                    <div className="flightLegColumnDetail" style={{justifyContent: 'center'}}> -></div>
+                    <div className="flightLegColumnDetail">
+                        <div>{flightLeg.arrivalAirport.code}</div>
+                        <div>{flightLeg.arrivalAirport.name}</div>
+                        <div>{flightLeg.arrivalTimeLocale}</div>
+                    </div>
                 </div>
-                <div className="flightLegColumnDetail" style={{justifyContent: 'center'}}> -> </div>
-                <div className="flightLegColumnDetail">
-                    <div>{flightLeg.arrivalAirport.code}</div>
-                    <div>{flightLeg.arrivalAirport.name}</div>
-                    <div>{flightLeg.arrivalTimeLocale}</div>
-                </div>
-            </div>
-            <div className="flightLegRowDetail">airplane: {flightLeg.airplane.code}</div>
+                <div className="flightLegRowDetail">airplane: {flightLeg.airplane.code}</div>
 
-            <div className="labelsInAirplane">|--left wing--|</div>
-            <div>{row1.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
-            <div>{row2.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
-            <div className="labelsInAirplane">Here is a corridor</div>
-            <div>{row3.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
-            <div>{row4.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
-            <div className="labelsInAirplane">|-right wing--|</div>
+                <div className="labelsInAirplane">|--left wing--|</div>
+                <div>{row1.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
+                <div>{row2.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
+                <div className="labelsInAirplane">Here is a corridor</div>
+                <div>{row3.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
+                <div>{row4.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
+                <div className="labelsInAirplane">|-right wing--|</div>
+            </div>
+
+            {this.props.step > 1 ?
+                <div style={{marginLeft: 5, fontSize: 20}}>{flightLeg !== undefined && this.props.chosenPlaces.filter(row => row.id === flightLeg.id).length} places choosed from {this.props.amountOfPassengers}</div>
+                : ''}
         </div>
 
     }
 
-    renderProperButton(code, id, color, legId){
-        if(this.props.disabled || color === this.state.notFree){
+    renderProperButton(code, id, color, legId) {
+        if (this.props.disabled || color === this.state.notFree) {
             return <div className="back" style={{backgroundColor: color, border: '1px solid black'}}>
-                        <Button ghost={true} disabled={true} className="placeButton" key={id} size="small"
-                           type={"neutral"}>{code}</Button>
-                    </div>
+                <Button ghost={true} disabled={true} className="placeButton" key={id} size="small"
+                        type={"neutral"}>{code}</Button>
+            </div>
         }
         else {
             return <PlaceButtonComponent code={code} id={id} legId={legId}/>
@@ -134,7 +153,10 @@ export class AirplaneComponent extends React.Component {
 const mapStateToProps = (state) => {
     return {
         flightLegs: state.flightLegs,
-        reservations: state.reservations.reservations
+        reservations: state.reservations.reservations,
+        chosenPlaces: state.reservedFlight.chosenPlaces,
+        amountOfPassengers: state.search.amountOfPassengers,
+        step: state.stepper.step,
     }
 };
 const mapDispatchToProps = {};

@@ -1,10 +1,8 @@
 import * as React from "react";
 import 'antd/dist/antd.css';
 import '../styles/ChoiceFlightContainer.css'
-import {store} from '../store'
 import {Button} from 'antd';
 import {connect} from "react-redux";
-import {reservations} from "../reducers/reservations";
 import {removePlaceFromReserve, setPlacesToReserve} from "../actions/index";
 
 export class PlaceButton extends React.Component {
@@ -21,6 +19,9 @@ export class PlaceButton extends React.Component {
     }
 
     componentDidMount() {
+        if(this.props.chosenPlaces.find(row => row.place === this.props.id) !== undefined){
+            this.setState({current: this.state.clicked})
+        }
     }
 
     changeColor(){
@@ -28,16 +29,18 @@ export class PlaceButton extends React.Component {
     }
 
     onClick(){
-        this.changeColor();
-        if(this.props.chosenPlaces.find(row => row.id === this.props.legId) === undefined){
-            this.props.setPlacesToReserve(this.props.chosenPlaces.concat([{id: this.props.legId, places:[this.props.id]}]))
+        const chosenPlaces = this.props.chosenPlaces;
+
+        if(chosenPlaces.filter(row => row.id === this.props.legId).length < this.props.amountOfPassengers &&
+            this.state.current === this.state.free)
+        {
+            this.props.setPlacesToReserve(chosenPlaces.concat([{id: this.props.legId, place: this.props.id, code: this.props.code}]))
+            this.changeColor();
         }
-        else{
-            let copy = this.props.chosenPlaces.find(row => row.id === this.props.legId);
-            // this.props.removePlaceFromReserve(copy);
-            // copy.places.concat([this.props.id]);
-            // console.log(copy);
-            // this.props.setPlacesToReserve(copy);
+        else if(this.state.current === this.state.clicked){
+            const toDelete = this.props.chosenPlaces.find(row => row.place === this.props.id);
+            this.props.setPlacesToReserve(chosenPlaces.filter(row => row !== toDelete));
+            this.changeColor();
         }
     }
 
@@ -51,7 +54,10 @@ export class PlaceButton extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {chosenPlaces: state.reservedFlight.chosenPlaces}
+    return {
+        chosenPlaces: state.reservedFlight.chosenPlaces,
+        amountOfPassengers: state.search.amountOfPassengers
+    }
 };
 const mapDispatchToProps = {setPlacesToReserve, removePlaceFromReserve};
 

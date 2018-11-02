@@ -24,21 +24,50 @@ export const setFirstStep = (payload) => ({
 });
 
 export const setReservations = (payload) => ({
-   type: 'SET_RESERVED_PLACES_FOR_FLIGHT_LEG',
-   payload
+    type: 'SET_RESERVED_PLACES_FOR_FLIGHT_LEG',
+    payload
 });
 
 export const setFlightToReserve = (payload) => ({
-   type: 'FLIGHTS_CHOSEN_TO_RESERVE',
-   payload
+    type: 'FLIGHTS_CHOSEN_TO_RESERVE',
+    payload
 });
 
 export const setPlacesToReserve = (payload) => ({
-   type: 'PLACES_CHOSEN_TO_RESERVE',
-   payload
+    type: 'PLACES_CHOSEN_TO_RESERVE',
+    payload
 });
 
 export const removePlaceFromReserve = (payload) => ({
     type: 'REMOVE_PLACE_FROM_RESERVE',
+    payload
+});
+
+export const setSpecificReservation = (payload) => ({
+    type: 'ADD_ONE_RESERVATION',
+    payload
+});
+
+export const addSpecificReservation = (payload) => ({
+    type: 'ADD_ANOTHER_RESERVATION',
+    payload
+});
+
+export const addPersonalData = (payload) => ({
+    type: 'ADD_PERSONAL_DATA',
+    payload
+});
+
+export const removePersonalData = (payload) => ({
+    type: 'REMOVE_ONE_RESERVATION',
+    payload
+});
+
+export const itinerateSubmit = () => ({
+    type: 'ITERATE_SUBMIT',
+});
+
+export const removeSpecificReservation = (payload) => ({
+    type: 'REMOVE_ONE_RESERVATION',
     payload
 });

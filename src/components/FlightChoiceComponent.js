@@ -86,6 +86,7 @@ export class FlightChoiceComponent extends React.Component {
     }
 
     getPlaces() {
+        console.log('@@', this.props.setFirstStep);
         const list = this.props.flights.map(flight => {
             const flightLegs = flight.flightLegs;
             let sth = [];

@@ -38,7 +38,8 @@ function getStepContent(step) {
             if(endpoint === '/reservation/set-places') return '';
             return history.push("/reservation/set-places");
         case 3:
-            return 'Confirm the reservation';
+            if(endpoint === '/reservation/personal-data') return '';
+            return history.push("/reservation/personal-data");
         default:
             return 'Unknown stepIndex';
     }
