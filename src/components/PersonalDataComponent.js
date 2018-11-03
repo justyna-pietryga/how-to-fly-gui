@@ -23,7 +23,7 @@ export class PersonalDataComponent extends React.Component {
                 <Button style={{marginRight: 4}} type='neutral' onClick={() => this.props.setFirstStep(2)}>Back</Button>
                 <Button type='primary' onClick={() => {
                     this.props.itinerateSubmit();
-                    // this.props.setFirstStep(4)
+                    this.props.setFirstStep(4)
                 }}>Next</Button>
             </div>
         );

@@ -26,7 +26,7 @@ export class FlightSearcherFormComponent extends React.Component {
         super();
 
         this.state = {
-            amountOfPassengers: 0,
+            amountOfPassengers: 1,
             amountOfChildren: 0,
         }
     }

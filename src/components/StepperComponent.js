@@ -21,7 +21,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return ['Search flights', 'Choose the one', 'Choose the sits', 'Confirm the reservation'];
+    return ['Search flights', 'Choose the one', 'Choose the sits', 'Personal Data', 'Confirm the reservation'];
 }
 
 function getStepContent(step) {
@@ -40,6 +40,9 @@ function getStepContent(step) {
         case 3:
             if(endpoint === '/reservation/personal-data') return '';
             return history.push("/reservation/personal-data");
+        case 4:
+            if(endpoint === '/reservation/confirm-reservation') return '';
+            return history.push("/reservation/confirm-reservation");
         default:
             return 'Unknown stepIndex';
     }
@@ -109,16 +112,6 @@ export class StepperComponent extends React.Component {
 
                 <div>
                     {getStepContent(this.state.activeStep)}
-                    {/*<Button*/}
-                    {/*disabled={activeStep === 0}*/}
-                    {/*onClick={this.handleBack}*/}
-                    {/*className={classes.backButton}*/}
-                    {/*>*/}
-                    {/*Back*/}
-                    {/*</Button>*/}
-                    {/*<Button variant="contained" color="primary" onClick={this.handleNext}>*/}
-                    {/*{activeStep === steps.length - 1 ? 'Finish' : 'Next'}*/}
-                    {/*</Button>*/}
                 </div>
 
             </div>

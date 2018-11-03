@@ -24,10 +24,17 @@ export class PersonalDataForm extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({submit: this.props.submit})
+        const {passengersData, psnSeq} = this.props;
+        const data = passengersData.filter(row => row.psnSeq === psnSeq);
+        this.setState({submit: this.props.submit});
+        if (data !== undefined && data.length > 0) {
+            const obj = data[0];
+            const {name, surname, pesel, phone} = obj;
+            this.setState({name: name, surname: surname, pesel: pesel, phone: phone});
+        }
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         const {name, surname, phone, pesel} = this.state;
         const objToPut = {
             psnSeq: this.props.psnSeq,
@@ -37,7 +44,7 @@ export class PersonalDataForm extends React.Component {
             pesel: pesel,
         };
 
-        if(this.props.submit > this.state.submit){
+        if (this.props.submit > this.state.submit) {
             this.setState({submit: this.props.submit});
             this.props.addPersonalData([objToPut])
         }
@@ -59,7 +66,7 @@ export class PersonalDataForm extends React.Component {
         // const { getFieldDecorator } = this.props.form;
         const {formLayout} = this.state;
         const formItemLayout = formLayout === 'horizontal' ? {
-            labelCol: {span: 4},
+            labelCol: {span: 7},
             wrapperCol: {span: 14},
         } : null;
         const buttonItemLayout = formLayout === 'horizontal' ? {
@@ -67,11 +74,12 @@ export class PersonalDataForm extends React.Component {
         } : null;
 
         const legs = this.flightLegs();
-        const { name, surname, pesel, phone } = this.state;
+        const {name, surname, pesel, phone} = this.state;
         return (
             <div style={{
                 border: "solid 1px grey",
-                width: '80%',
+                borderRadius:"2rem",
+                width: '70%',
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 marginBottom: '2rem'
@@ -88,8 +96,8 @@ export class PersonalDataForm extends React.Component {
                     </FormItem>
                     <FormItem
                         label="Surname" {...formItemLayout}>
-                        <Input  value={surname} placeholder="Surname" style={{width: '80%'}}
-                                onChange={(v) => this.setState({surname: v.target.value})}/>
+                        <Input value={surname} placeholder="Surname" style={{width: '80%'}}
+                               onChange={(v) => this.setState({surname: v.target.value})}/>
                     </FormItem>
 
                     <FormItem
@@ -104,9 +112,17 @@ export class PersonalDataForm extends React.Component {
                                onChange={(v) => this.setState({phone: v.target.value})}/>
                     </FormItem>
 
-                    {legs.map(leg => <FormItem {...formItemLayout} label="Place">
-                        <PlaceSelector legId={leg.id} psnSeq={this.props.psnSeq}/>
-                    </FormItem>)}
+                    {legs.map(leg => {
+                        const {flightLegs} = this.props;
+                        const legDetails = flightLegs.filter(flightLeg => flightLeg.id === leg.id);
+                        const legDetObject = legDetails !== undefined ? legDetails[0]: {};
+                        const departCity = legDetObject.departureAirport.city.name;
+                        const arrivalCity = legDetObject.arrivalAirport.city.name;
+                        const label = "Place (" +departCity+"->"+arrivalCity+")";
+                        return <FormItem {...formItemLayout} label={label}>
+                                     <PlaceSelector legId={leg.id} psnSeq={this.props.psnSeq}/>
+                               </FormItem>
+                    })}
                 </Form>
             </div>
         );
@@ -120,7 +136,9 @@ const mapStateToProps = (state) => {
         chosenPlaces: state.reservedFlight.chosenPlaces,
         amountOfPassengers: state.search.amountOfPassengers,
         flights: state.flights,
+        flightLegs: state.flightLegs,
         chosenFlight: state.reservedFlight.chosenFlight,
+        passengersData: state.reservedFlight.passengersData,
         submit: state.reservedFlight.submit
     }
 };

@@ -19,8 +19,11 @@ export class PlaceSelector extends React.Component {
         const places = this.getPlaces();
         const defaultPlace = places[0] !== undefined ? places[0].place : undefined;
         const objToPut = {placeId: defaultPlace, legId: this.props.legId, psnSeq: this.props.psnSeq};
+        const specificReservation = this.props.specificReservation;
 
-        this.props.addSpecificReservation([objToPut]);
+        if (specificReservation.filter(row => row.legId === this.props.legId && row.psnSeq === this.props.psnSeq).length === 0){
+            this.props.addSpecificReservation([objToPut]);
+        }
     }
 
     handleChange(e) {
@@ -44,10 +47,10 @@ export class PlaceSelector extends React.Component {
 
     render() {
         const places = this.getPlaces();
-        const defaultPlace = places[0] !== undefined ? places[0].code : undefined;
+        const defaultPlace = places[this.props.psnSeq] !== undefined ? places[this.props.psnSeq].code : undefined;
         return (
             <div>
-                <Select defaultValue={defaultPlace} style={{width: 120}} onSelect={this.handleChange}>
+                <Select defaultValue={defaultPlace} style={{width: 120}} onChange={this.handleChange}>
                     {places.map(place => <Option key={place.place} value={place.place}>{place.code}</Option>)}
                 </Select>
             </div>

@@ -9,6 +9,7 @@ import history from '.././history';
 import FlightChoiceComponent from "./FlightChoiceComponent";
 import PlacesChoiceComponent from "./PlacesChoiceComponent"
 import PersonalDataComponent from "./PersonalDataComponent";
+import ConfirmReservationComponent from "./ConfirmReservationComponent";
 
 export class App extends React.Component {
 
@@ -46,6 +47,7 @@ export class App extends React.Component {
                             <Route path="/reservation/choose-flight" component={FlightChoiceComponent}/>
                             <Route path="/reservation/set-places" component={PlacesChoiceComponent}/>
                             <Route path="/reservation/personal-data" component={PersonalDataComponent}/>
+                            <Route path="/reservation/confirm-reservation" component={ConfirmReservationComponent}/>
                         </div>
                     </Router>
                 </div>
