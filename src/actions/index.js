@@ -71,3 +71,8 @@ export const removeSpecificReservation = (payload) => ({
     type: 'REMOVE_ONE_RESERVATION',
     payload
 });
+
+export const setTimeMode = (payload) => ({
+   type: 'SET_TIME_MODE',
+   payload
+});

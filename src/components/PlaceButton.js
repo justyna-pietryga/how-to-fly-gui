@@ -9,10 +9,12 @@ export class PlaceButton extends React.Component {
 
     constructor() {
         super();
+        const color =  '#99e286';
         this.state = {
-            free: '#99e286',
+            free: color,
             clicked: '#ec7a34',
-            current: '#99e286'
+            current: '#99e286',
+            cabinClass : '#f1ff00',
         };
 
         this.onClick=this.onClick.bind(this);
@@ -22,17 +24,21 @@ export class PlaceButton extends React.Component {
         if(this.props.chosenPlaces.find(row => row.place === this.props.id) !== undefined){
             this.setState({current: this.state.clicked})
         }
+        else if(this.props.cabinClass === 'A') {
+            this.setState({current: this.state.cabinClass})
+        }
     }
 
     changeColor(){
-        this.state.current === this.state.free ? this.setState({current: this.state.clicked}) : this.setState({current: this.state.free});
+        this.state.current !== this.state.clicked ? this.setState({current: this.state.clicked}) :
+            this.props.cabinClass !== 'A' ? this.setState({current: this.state.free}) : this.setState({current: this.state.cabinClass});
     }
 
     onClick(){
         const chosenPlaces = this.props.chosenPlaces;
 
         if(chosenPlaces.filter(row => row.id === this.props.legId).length < this.props.amountOfPassengers &&
-            this.state.current === this.state.free)
+            this.state.current !== this.state.clicked)
         {
             this.props.setPlacesToReserve(chosenPlaces.concat([{id: this.props.legId, place: this.props.id, code: this.props.code}]))
             this.changeColor();

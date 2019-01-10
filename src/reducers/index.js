@@ -6,6 +6,7 @@ import {stepper} from "./stepper";
 import {reservations} from "./reservations";
 import {flightLegs} from "./flightLegs";
 import {reservedFlight} from "./reservedFlight"
+import {ui} from "./ui";
 
 export default combineReducers({
     cities,
@@ -14,5 +15,6 @@ export default combineReducers({
     stepper,
     flightLegs,
     reservations,
-    reservedFlight
+    reservedFlight,
+    ui,
 });

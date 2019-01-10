@@ -3,9 +3,9 @@ import 'antd/dist/antd.css';
 import {store} from '../store'
 import {connect} from "react-redux";
 import '../styles/ChoiceFlightContainer.css'
-import {Table, Button} from 'antd';
+import {Table, Button, Switch} from 'antd';
 import moment from 'moment'
-import {setFirstStep, setReservations, setFlightToReserve, setPlacesToReserve} from "../actions/index";
+import {setFirstStep, setReservations, setFlightToReserve, setPlacesToReserve, setTimeMode} from "../actions/index";
 import {AirplanesComponent} from "./AirplanesComponent";
 import {FaCheck} from 'react-icons/fa'
 import $ from "jquery";
@@ -25,6 +25,8 @@ export class FlightChoiceComponent extends React.Component {
     constructor() {
         super();
         this.state = {}
+
+        this.timeModeChange = this.timeModeChange.bind(this)
     }
 
     componentDidMount() {
@@ -51,8 +53,13 @@ export class FlightChoiceComponent extends React.Component {
         return columns;
     }
 
+    timeModeChange(time) {
+        this.props.setTimeMode(time)
+    }
+
     getRows() {
         let i = 0;
+        const {timeMode} = this.props;
         const flights = store.getState().flights.map(flight => {
             const id = flight.id;
             const flightLegs = flight.flightLegs;
@@ -62,16 +69,15 @@ export class FlightChoiceComponent extends React.Component {
                 description += '->';
                 description += flightLegs[j + 1].arrivalAirport.city.name + '(' + flightLegs[j + 1].arrivalAirport.code + ')';
             }
-            // let description2 = flightLegs.map(f => f.departureAirport.city.name + '(' + f.departureAirport.code + ')' +
-            //     moment(f.departureTimeLocale.slice(0, 16)).format('DD.MM.YYYY hh:mm') + '->' +
-            //     f.arrivalAirport.city.name + '(' + f.arrivalAirport.code + ')' +
-            //     moment(f.arrivalTimeLocale.slice(0, 16)).format('DD.MM.YYYY hh:mm'));
-            // console.log(description2.toString().replace(/,/g, '\n'));
+
+            const deptTime = timeMode ? flightLegs[0].departureTimeUTC : flightLegs[0].departureTimeLocale;
+            const arrivalTime = timeMode ? flightLegs[flightLegs.length - 1].arrivalTimeUTC :
+                flightLegs[flightLegs.length - 1].arrivalTimeLocale;
             return {
                 key: i++,
                 id: id,
-                depTime: moment(flightLegs[0].departureTimeLocale.slice(0, 16)).format('DD.MM.YY hh:mm'),
-                arrivalTime: moment(flightLegs[flightLegs.length - 1].arrivalTimeUTC).format('DD.MM.YY hh:mm'),
+                depTime: moment(deptTime.slice(0, 16)).format('DD.MM.YY hh:mm'),
+                arrivalTime: moment(arrivalTime.slice(0, 16)).format('DD.MM.YY hh:mm'),
                 departAirport: flightLegs[0].departureAirport.code + "(" + flightLegs[0].departureAirport.name + ")",
                 arrivalAirport: flightLegs[flightLegs.length - 1].arrivalAirport.code + "(" +
                 flightLegs[flightLegs.length - 1].arrivalAirport.name + ")",
@@ -86,7 +92,6 @@ export class FlightChoiceComponent extends React.Component {
     }
 
     getPlaces() {
-        console.log('@@', this.props.setFirstStep);
         const list = this.props.flights.map(flight => {
             const flightLegs = flight.flightLegs;
             let sth = [];
@@ -102,6 +107,9 @@ export class FlightChoiceComponent extends React.Component {
     render() {
 
         return <div className="choiceFlightContainer">
+            Choose Time Mode: <Switch checkedChildren="UTC" unCheckedChildren="Local"
+                                      onChange={this.timeModeChange}
+                                      defaultChecked={this.props.timeMode} style={{marginBottom: "10px"}}/>
             <Table className="myTable"
                    columns={this.getColumns()}
                    expandedRowRender={record => record.description}
@@ -129,9 +137,10 @@ const mapStateToProps = (state) => {
         cities: state.cities,
         flights: state.flights,
         chosenFlight: state.reservedFlight.chosenFlight,
-        chosenPlaces: state.reservedFlight.chosenPlaces
+        chosenPlaces: state.reservedFlight.chosenPlaces,
+        timeMode: state.ui.timeMode
     }
 };
-const mapDispatchToProps = {setFirstStep, setReservations, setFlightToReserve, setPlacesToReserve};
+const mapDispatchToProps = {setFirstStep, setReservations, setFlightToReserve, setPlacesToReserve, setTimeMode};
 
 export default connect(mapStateToProps, mapDispatchToProps)(FlightChoiceComponent);

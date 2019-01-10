@@ -5,6 +5,7 @@ import {store} from '../store'
 import {Button} from 'antd';
 import {connect} from "react-redux";
 import {reservations} from "../reducers/reservations";
+import moment from 'moment'
 import {PlaceButton, PlaceButtonComponent} from "./PlaceButton";
 import Typography from '@material-ui/core/Typography';
 
@@ -14,7 +15,8 @@ export class AirplaneComponent extends React.Component {
         super();
         this.state = {
             free: '#99e286',
-            notFree: '#858482'
+            notFree: '#858482',
+            cabinClass : '#f1ff00',
         }
     }
 
@@ -97,29 +99,32 @@ export class AirplaneComponent extends React.Component {
             }
         }
 
+        const {timeMode} = this.props;
+        const deptTime = timeMode ? flightLeg.departureTimeUTC : flightLeg.departureTimeLocale;
+        const arrivalTime = timeMode ? flightLeg.arrivalTimeUTC : flightLeg.arrivalTimeLocale;
         return <div style={{display: "flex", alignItems: 'center'}}>
             <div className="oneAirplane">
                 <div className="flightLegRowDetail">
                     <div className="flightLegColumnDetail">
                         <div>{flightLeg.departureAirport.code}</div>
                         <div>{flightLeg.departureAirport.name}</div>
-                        <div>{flightLeg.departureTimeLocale}</div>
+                        <div>{moment(deptTime.slice(0, 16)).format('DD.MM.YY hh:mm')}</div>
                     </div>
                     <div className="flightLegColumnDetail" style={{justifyContent: 'center'}}> -></div>
                     <div className="flightLegColumnDetail">
                         <div>{flightLeg.arrivalAirport.code}</div>
                         <div>{flightLeg.arrivalAirport.name}</div>
-                        <div>{flightLeg.arrivalTimeLocale}</div>
+                        <div>{moment(arrivalTime.slice(0, 16)).format('DD.MM.YY hh:mm')}</div>
                     </div>
                 </div>
                 <div className="flightLegRowDetail">airplane: {flightLeg.airplane.code}</div>
 
                 <div className="labelsInAirplane">|--left wing--|</div>
-                <div>{row1.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
-                <div>{row2.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
+                <div>{row1.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId, row.place.cabinClass))}</div>
+                <div>{row2.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId, row.place.cabinClass))}</div>
                 <div className="labelsInAirplane">Here is a corridor</div>
-                <div>{row3.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
-                <div>{row4.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId))}</div>
+                <div>{row3.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId, row.place.cabinClass))}</div>
+                <div>{row4.map(row => this.renderProperButton(row.place.code, row.place.id, row.color, legId, row.place.cabinClass))}</div>
                 <div className="labelsInAirplane">|-right wing--|</div>
             </div>
 
@@ -130,15 +135,16 @@ export class AirplaneComponent extends React.Component {
 
     }
 
-    renderProperButton(code, id, color, legId) {
+    renderProperButton(code, id, color, legId, cabinClass = 'B') {
+        const color2 = cabinClass === 'A' ? this.state.cabinClass : this.state.free;
         if (this.props.disabled || color === this.state.notFree) {
-            return <div className="back" style={{backgroundColor: color, border: '1px solid black'}}>
+            return <div className="back" style={{backgroundColor: color2, border: '1px solid black'}}>
                 <Button ghost={true} disabled={true} className="placeButton" key={id} size="small"
-                        type={"neutral"}>{code}</Button>
+                        type={"neutral"} >{code}</Button>
             </div>
         }
         else {
-            return <PlaceButtonComponent code={code} id={id} legId={legId}/>
+            return <PlaceButtonComponent code={code} id={id} legId={legId} cabinClass={cabinClass}/>
         }
     }
 
@@ -157,6 +163,7 @@ const mapStateToProps = (state) => {
         chosenPlaces: state.reservedFlight.chosenPlaces,
         amountOfPassengers: state.search.amountOfPassengers,
         step: state.stepper.step,
+        timeMode: state.ui.timeMode,
     }
 };
 const mapDispatchToProps = {};
