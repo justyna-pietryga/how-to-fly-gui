@@ -29,8 +29,10 @@ function getStepContent(step) {
     const endpoint = url.slice(21, url.length);
     switch (step) {
         case 0:
-            if(endpoint === '/reservation/set-parameters') return '';
-            return history.push("/reservation/set-parameters");
+            if(endpoint === '/reservation/*' && endpoint !== '/reservation/set-parameters') {
+                return history.push("/reservation/set-parameters");
+            }
+            return '';
         case 1:
             if(endpoint === '/reservation/choose-flight') return '';
             return history.push("/reservation/choose-flight");
@@ -44,7 +46,7 @@ function getStepContent(step) {
             if(endpoint === '/reservation/confirm-reservation') return '';
             return history.push("/reservation/confirm-reservation");
         default:
-            return 'Unknown stepIndex';
+            return '';
     }
 }
 

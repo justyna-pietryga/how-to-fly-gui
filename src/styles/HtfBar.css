@@ -1,0 +1,23 @@
+.appBar{
+    position: relative
+}
+.toolbarTitle{
+    flex: 1
+}
+.layout {
+    width: auto
+}
+
+.activeLink{
+    color: white!important;
+    font-style: italic;
+}
+
+.notActive{
+    color:black
+}
+
+.notActive:active{
+    color:white;!important
+    font-style: italic;
+}

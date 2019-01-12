@@ -17,7 +17,7 @@ export class PlaceSelector extends React.Component {
 
     componentDidMount() {
         const places = this.getPlaces();
-        const defaultPlace = places[0] !== undefined ? places[0].place : undefined;
+        const defaultPlace = places[this.props.psnSeq] !== undefined ? places[this.props.psnSeq].place : undefined;
         const objToPut = {placeId: defaultPlace, legId: this.props.legId, psnSeq: this.props.psnSeq};
         const specificReservation = this.props.specificReservation;
 

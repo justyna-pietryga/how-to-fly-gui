@@ -10,6 +10,8 @@ import FlightChoiceComponent from "./FlightChoiceComponent";
 import PlacesChoiceComponent from "./PlacesChoiceComponent"
 import PersonalDataComponent from "./PersonalDataComponent";
 import ConfirmReservationComponent from "./ConfirmReservationComponent";
+import HtfBar from "./web-structure/common/HtfBar";
+import {Login} from "./web-structure/login-logout/Login";
 
 export class App extends React.Component {
 
@@ -42,12 +44,14 @@ export class App extends React.Component {
                 <div className="AppContainer">
                     <Router history={history}>
                         <div>
-                            <StepperComponent/>
+                            <HtfBar/>
+                            <Route path="/reservation/*" component={StepperComponent}/>
                             <Route path="/reservation/set-parameters" component={FlightSearcherFormContainer}/>
                             <Route path="/reservation/choose-flight" component={FlightChoiceComponent}/>
                             <Route path="/reservation/set-places" component={PlacesChoiceComponent}/>
                             <Route path="/reservation/personal-data" component={PersonalDataComponent}/>
                             <Route path="/reservation/confirm-reservation" component={ConfirmReservationComponent}/>
+                            <Route path="/login" component={Login}/>
                         </div>
                     </Router>
                 </div>

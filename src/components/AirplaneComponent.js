@@ -36,10 +36,6 @@ export class AirplaneComponent extends React.Component {
     }
 
     isThisPlaceFree(notFree, place) {
-        notFree.find(one => {
-            console.log('one, place', one.code, place.code);
-            return one.code === place.code
-        });
         return notFree.find(one => one === place.code) === undefined;
     }
 
@@ -68,34 +64,22 @@ export class AirplaneComponent extends React.Component {
             for (let i = 0; i < placesPerRow; i++) {
                 const place = this.props.places[flight][j].places[i];
                 this.isThisPlaceFree(notFreePlaces, place) ?
-                    row1[i] = {place: place, color: this.state.free} : row1[i] = {
-                        place: place,
-                        color: this.state.notFree
-                    };
+                    row1[i] = {place: place, color: this.state.free} : row1[i] = {place: place, color: this.state.notFree};
             }
             for (let i = placesPerRow; i < placesPerRow * 2; i++) {
                 const place = this.props.places[flight][j].places[i];
                 this.isThisPlaceFree(notFreePlaces, place) ?
-                    row2[i] = {place: place, color: this.state.free} : row2[i] = {
-                        place: place,
-                        color: this.state.notFree
-                    };
+                    row2[i] = {place: place, color: this.state.free} : row2[i] = {place: place, color: this.state.notFree};
             }
             for (let i = placesPerRow * 2; i < placesPerRow * 3; i++) {
                 const place = this.props.places[flight][j].places[i];
                 this.isThisPlaceFree(notFreePlaces, place) ?
-                    row3[i] = {place: place, color: this.state.free} : row3[i] = {
-                        place: place,
-                        color: this.state.notFree
-                    };
+                    row3[i] = {place: place, color: this.state.free} : row3[i] = {place: place, color: this.state.notFree};
             }
             for (let i = placesPerRow * 3; i < placesPerRow * 4; i++) {
                 const place = this.props.places[flight][j].places[i];
                 this.isThisPlaceFree(notFreePlaces, place) ?
-                    row4[i] = {place: place, color: this.state.free} : row4[i] = {
-                        place: place,
-                        color: this.state.notFree
-                    };
+                    row4[i] = {place: place, color: this.state.free} : row4[i] = {place: place, color: this.state.notFree};
             }
         }
 
@@ -136,7 +120,7 @@ export class AirplaneComponent extends React.Component {
     }
 
     renderProperButton(code, id, color, legId, cabinClass = 'B') {
-        const color2 = cabinClass === 'A' ? this.state.cabinClass : this.state.free;
+        const color2 = cabinClass === 'A' && color !== this.state.notFree ? this.state.cabinClass : color;
         if (this.props.disabled || color === this.state.notFree) {
             return <div className="back" style={{backgroundColor: color2, border: '1px solid black'}}>
                 <Button ghost={true} disabled={true} className="placeButton" key={id} size="small"
