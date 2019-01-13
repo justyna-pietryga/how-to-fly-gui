@@ -4,6 +4,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {store} from '../store'
+import history from '.././history';
 import {Redirect} from 'react-router-dom'
 
 const styles = theme => ({
@@ -20,7 +21,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return ['Search flights', 'Choose the one', 'Choose the sits', 'Confirm the reservation'];
+    return ['Search flights', 'Choose the one', 'Choose the sits', 'Personal Data', 'Confirm the reservation'];
 }
 
 function getStepContent(step) {
@@ -28,17 +29,24 @@ function getStepContent(step) {
     const endpoint = url.slice(21, url.length);
     switch (step) {
         case 0:
-            if(endpoint === '/reservation/setParameters') return '';
-            return <Redirect to="/reservation/setParameters"/>;
+            if(endpoint === '/reservation/*' && endpoint !== '/reservation/set-parameters') {
+                return history.push("/reservation/set-parameters");
+            }
+            return '';
         case 1:
-            if(endpoint === '/reservation/chooseFlight') return '';
-            return <Redirect to="/reservation/chooseFlight"/>;
+            if(endpoint === '/reservation/choose-flight') return '';
+            return history.push("/reservation/choose-flight");
         case 2:
-            return 'Choose the sits';
+            if(endpoint === '/reservation/set-places') return '';
+            return history.push("/reservation/set-places");
         case 3:
-            return 'Confirm the reservation';
+            if(endpoint === '/reservation/personal-data') return '';
+            return history.push("/reservation/personal-data");
+        case 4:
+            if(endpoint === '/reservation/confirm-reservation') return '';
+            return history.push("/reservation/confirm-reservation");
         default:
-            return 'Uknown stepIndex';
+            return '';
     }
 }
 
@@ -106,16 +114,6 @@ export class StepperComponent extends React.Component {
 
                 <div>
                     {getStepContent(this.state.activeStep)}
-                    {/*<Button*/}
-                    {/*disabled={activeStep === 0}*/}
-                    {/*onClick={this.handleBack}*/}
-                    {/*className={classes.backButton}*/}
-                    {/*>*/}
-                    {/*Back*/}
-                    {/*</Button>*/}
-                    {/*<Button variant="contained" color="primary" onClick={this.handleNext}>*/}
-                    {/*{activeStep === steps.length - 1 ? 'Finish' : 'Next'}*/}
-                    {/*</Button>*/}
                 </div>
 
             </div>

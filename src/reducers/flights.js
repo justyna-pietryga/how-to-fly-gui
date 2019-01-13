@@ -7,4 +7,4 @@ export const flights = (state = [], action) => {
         default:
             return state;
     }
-}
+};

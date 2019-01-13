@@ -1,15 +1,36 @@
 import * as React from "react";
 import '../App.css';
-import {citiesFetched} from ".././actions";
+import {citiesFetched, setFlightLegs} from ".././actions";
 import {connect} from "react-redux";
 import {FlightSearcherFormContainer} from "../containers/FlightSearcherFormContainer";
 import StepperComponent from "./StepperComponent";
-import {BrowserRouter, Route} from "react-router-dom";
+import {BrowserRouter, Router, Route} from "react-router-dom";
+import history from '.././history';
 import FlightChoiceComponent from "./FlightChoiceComponent";
+import PlacesChoiceComponent from "./PlacesChoiceComponent"
+import PersonalDataComponent from "./PersonalDataComponent";
+import ConfirmReservationComponent from "./ConfirmReservationComponent";
+import HtfBar from "./web-structure/common/HtfBar";
+import {Login} from "./web-structure/login-logout/Login";
 
 export class App extends React.Component {
 
     componentDidMount() {
+       this.setUp()
+    }
+
+    setUp(){
+        this.getCities();
+        this.getFlightLegs();
+    }
+
+    getFlightLegs(){
+        fetch("http://localhost:8085/api/flight-legs")
+            .then(res => res.json())
+            .then(json => this.props.setFlightLegs(json));
+    }
+
+    getCities(){
         fetch("http://localhost:8085/api/cities")
             .then(res => res.json())
             .then(json => this.props.citiesFetched(json));
@@ -21,13 +42,18 @@ export class App extends React.Component {
                 {/*<header className="App-header">*/}
                 {/**/}
                 <div className="AppContainer">
-                    <BrowserRouter>
+                    <Router history={history}>
                         <div>
-                            <StepperComponent/>
-                            <Route path="/reservation/setParameters" component={FlightSearcherFormContainer}/>
-                            <Route path="/reservation/chooseFlight" component={FlightChoiceComponent}/>
+                            <HtfBar/>
+                            <Route path="/reservation/*" component={StepperComponent}/>
+                            <Route path="/reservation/set-parameters" component={FlightSearcherFormContainer}/>
+                            <Route path="/reservation/choose-flight" component={FlightChoiceComponent}/>
+                            <Route path="/reservation/set-places" component={PlacesChoiceComponent}/>
+                            <Route path="/reservation/personal-data" component={PersonalDataComponent}/>
+                            <Route path="/reservation/confirm-reservation" component={ConfirmReservationComponent}/>
+                            <Route path="/login" component={Login}/>
                         </div>
-                    </BrowserRouter>
+                    </Router>
                 </div>
                 {/*</header>*/}
             </div>
@@ -37,10 +63,11 @@ export class App extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        cities: state.cities
+        cities: state.cities,
+        flightLegs: state.flightLegs
     }
 };
-const mapDispatchToProps = {citiesFetched};
+const mapDispatchToProps = {citiesFetched, setFlightLegs};
 
 export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);
 
