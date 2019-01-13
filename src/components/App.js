@@ -12,6 +12,7 @@ import PersonalDataComponent from "./PersonalDataComponent";
 import ConfirmReservationComponent from "./ConfirmReservationComponent";
 import HtfBar from "./web-structure/common/HtfBar";
 import {Login} from "./web-structure/login-logout/Login";
+import {Logout} from "./web-structure/login-logout/Logout";
 
 export class App extends React.Component {
 
@@ -52,6 +53,7 @@ export class App extends React.Component {
                             <Route path="/reservation/personal-data" component={PersonalDataComponent}/>
                             <Route path="/reservation/confirm-reservation" component={ConfirmReservationComponent}/>
                             <Route path="/login" component={Login}/>
+                            <Route path="/logout" component={Logout}/>
                         </div>
                     </Router>
                 </div>
