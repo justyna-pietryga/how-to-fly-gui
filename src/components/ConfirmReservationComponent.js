@@ -30,8 +30,9 @@ export class ConfirmReservationComponent extends React.Component {
         const {specificReservation, passengersData} = this.props;
         let reservationObj = {};
         let resForLegId = {};
+        let allForLegId = new Set;
         ids.forEach(legId => {
-            let allForLegId = new Set;
+
             const reservations = specificReservation.filter(e => e.legId === legId);
             reservations.forEach(reservation => {
                 const personalData = passengersData.filter(p => p.psnSeq === reservation.psnSeq)[0];
@@ -39,13 +40,14 @@ export class ConfirmReservationComponent extends React.Component {
                     passenger: {
                         name: personalData.name, surname: personalData.surname, pesel: personalData.pesel,
                         telephone: personalData.phone
-                    }, placeId: reservation.placeId
+                    }, placeId: reservation.placeId, legId: legId
                 };
                 allForLegId.add(resForLegId);
             });
             reservationObj[legId] = [...allForLegId];
+
         });
-        return reservationObj
+        return allForLegId;
     };
 
     onClick() {
@@ -56,12 +58,14 @@ export class ConfirmReservationComponent extends React.Component {
             let url = "http://localhost:8085/api/reservation/";
             const ids = this.getFlightLegsIds();
             const result = this.getSpecificReservationForLegIds(ids);
-            ids.forEach(id => {
-                this.Auth.fetch(url+id, {
-                    method: "POST",
-                    credentials: "same-origin", // include, *same-origin, omit
-                    body: JSON.stringify(result[id])
-                })
+            const batch = new Set();
+            // ids.forEach(id => batch.add(result[id]));
+
+            console.log('log', [...result]);
+            this.Auth.fetch(url, {
+                method: "POST",
+                credentials: "same-origin", // include, *same-origin, omit
+                body: JSON.stringify([...result])
             })
         }
     }
@@ -71,6 +75,7 @@ export class ConfirmReservationComponent extends React.Component {
             <div>
                 <Button style={{marginRight: 4}} type='neutral' onClick={() => this.props.setFirstStep(3)}>Back</Button>
                 <Button style={{marginRight: 4}} type='primary' onClick={this.onClick.bind(this)}>Confirm</Button>
+                <Button type='primary' onClick={() => this.Auth.fetch('http://localhost:8085/api/reservation/pnr-reservation')}></Button>
             </div>
         );
     }

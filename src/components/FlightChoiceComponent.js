@@ -24,7 +24,7 @@ export class FlightChoiceComponent extends React.Component {
 
     constructor() {
         super();
-        this.state = {}
+        this.state = {};
 
         this.timeModeChange = this.timeModeChange.bind(this)
     }

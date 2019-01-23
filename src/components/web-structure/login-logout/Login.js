@@ -7,10 +7,8 @@ import {
     Typography
 } from "@material-ui/core/es/index";
 import '../../../styles/Login.css'
-import { NavLink } from 'react-router-dom'
-import {setFirstStep} from "../../../actions/index";
+import {setUserLoggedIn} from "../../../actions/index";
 import CssBaseline from '@material-ui/core/CssBaseline';
-// import LockIcon from '@material-ui/icons/LockOutlined';
 import AuthService from './AuthService'
 import history from '../../.././history';
 
@@ -42,15 +40,18 @@ export class Login extends React.Component {
         )
     }
 
-    handleFormSubmit(e){
-        e.preventDefault();
+    handleFormSubmit(){
+        // e.preventDefault();
 
         this.Auth.login(this.state.username,this.state.password)
             .then(res =>{
                 history.replace('/');
             })
+            .then(() => this.props.setUserLoggedIn(true))
             .catch(err =>{
-                alert(err);
+                if(err.message > 400 && err.message <500) alert('Wrong login or password');
+                else if(err.message > 500) alert('Problem with server. Try again');
+                else alert(err);
             })
     }
 
@@ -79,7 +80,7 @@ export class Login extends React.Component {
                         label="Remember me"
                     />
                     <Button
-                        type="submit"
+                        // type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
@@ -100,6 +101,6 @@ const mapStateToProps = (state) => {
     }
 };
 
-const mapDispatchToProps = {setFirstStep};
+const mapDispatchToProps = {setUserLoggedIn};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -11,8 +11,9 @@ import PlacesChoiceComponent from "./PlacesChoiceComponent"
 import PersonalDataComponent from "./PersonalDataComponent";
 import ConfirmReservationComponent from "./ConfirmReservationComponent";
 import HtfBar from "./web-structure/common/HtfBar";
-import {Login} from "./web-structure/login-logout/Login";
-import {Logout} from "./web-structure/login-logout/Logout";
+import Login from "./web-structure/login-logout/Login";
+import Logout from "./web-structure/login-logout/Logout";
+import MyAccount from "./web-structure/user-panels/MyAccount";
 
 export class App extends React.Component {
 
@@ -54,6 +55,7 @@ export class App extends React.Component {
                             <Route path="/reservation/confirm-reservation" component={ConfirmReservationComponent}/>
                             <Route path="/login" component={Login}/>
                             <Route path="/logout" component={Logout}/>
+                            <Route path="/my-account" component={MyAccount}/>
                         </div>
                     </Router>
                 </div>

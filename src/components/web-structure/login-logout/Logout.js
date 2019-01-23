@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core/es/index";
 import '../../../styles/Login.css'
 import { NavLink } from 'react-router-dom'
-import {setFirstStep} from "../../../actions/index";
+import {setUserLoggedIn} from "../../../actions/index";
 import CssBaseline from '@material-ui/core/CssBaseline';
 // import LockIcon from '@material-ui/icons/LockOutlined';
 import AuthService from './AuthService'
@@ -26,6 +26,7 @@ export class Logout extends React.Component {
         else{
             this.Auth.logout();
             history.replace('/');
+            this.props.setUserLoggedIn(false);
         }
     }
 
@@ -46,6 +47,6 @@ const mapStateToProps = (state) => {
     }
 };
 
-const mapDispatchToProps = {setFirstStep};
+const mapDispatchToProps = {setUserLoggedIn};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Logout);

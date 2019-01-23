@@ -76,3 +76,13 @@ export const setTimeMode = (payload) => ({
    type: 'SET_TIME_MODE',
    payload
 });
+
+export const setUserLoggedIn = (payload) => ({
+    type: 'SET_USER_LOGGED_IN',
+    payload
+});
+
+export const setUserReservations = (payload) => ({
+    type: 'SET_USER_RESERVATIONS',
+    payload
+});

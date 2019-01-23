@@ -5,8 +5,8 @@ import {connect} from "react-redux";
 import {AppBar, Button, Toolbar, Typography} from "@material-ui/core/es/index";
 import '../../../styles/HtfBar.css'
 import '../../../styles/Login.css'
-import { NavLink } from 'react-router-dom'
-import {setFirstStep} from "../../../actions/index";
+import {NavLink} from 'react-router-dom'
+import {setUserLoggedIn} from "../../../actions/index";
 import AuthService from "../login-logout/AuthService";
 
 
@@ -18,21 +18,38 @@ export class HtfBar extends React.Component {
         this.Auth = new AuthService();
     }
 
+    componentDidMount() {
+        if (this.Auth.loggedIn()) this.props.setUserLoggedIn(true);
+        else this.props.setUserLoggedIn(false);
+    }
+
+    componentDidUpdate() {
+        if (this.Auth.loggedIn()) this.props.setUserLoggedIn(true);
+        else this.props.setUserLoggedIn(false);
+    }
+
     render() {
         return (
             <AppBar position="static" color="secondary" className="appBar" style={{marginBottom: "15px"}}>
                 <Toolbar>
                     <Typography variant="display1" color="inherit" noWrap className="toolbarTitle">
-                       How to Fly <b>#JRocks</b> Airline
+                        How to Fly <b>#JRocks</b> Airline
                     </Typography>
                     <Button>Main Page</Button>
-                    <Button><NavLink className="notActive" activeClassName="activeLink" to="/reservation/set-parameters">Search for flights</NavLink></Button>
+                    <Button><NavLink className="notActive" activeClassName="activeLink"
+                                     to="/reservation/set-parameters">Search for flights</NavLink></Button>
                     {/*<Button>Search for flights</Button>*/}
                     <Button>History</Button>
-                    {this.Auth.loggedIn() ? <Button color="primary" variant="outlined">
+
+                    {this.props.loggedIn ? <Button color="primary" variant="outlined">
+                        <NavLink className="notActive" activeClassName="activeLink" to="/my-account">
+                            My Account</NavLink>
+                    </Button> : ''}
+
+                    {this.props.loggedIn ? <Button color="primary" variant="outlined">
                         <NavLink className="notActive" activeClassName="activeLink" to="/logout">
                             Logout</NavLink>
-                    </Button> :  <Button color="primary" variant="outlined">
+                    </Button> : <Button color="primary" variant="outlined">
                         <NavLink className="notActive" activeClassName="activeLink" to="/login">
                             Login</NavLink>
                     </Button>}
@@ -44,9 +61,10 @@ export class HtfBar extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
+        loggedIn: state.user_info.loggedIn,
     }
 };
 
-const mapDispatchToProps = {setFirstStep};
+const mapDispatchToProps = {setUserLoggedIn};
 
 export default connect(mapStateToProps, mapDispatchToProps)(HtfBar);

@@ -7,6 +7,7 @@ import {reservations} from "./reservations";
 import {flightLegs} from "./flightLegs";
 import {reservedFlight} from "./reservedFlight"
 import {ui} from "./ui";
+import {user_info} from "./user_info";
 
 export default combineReducers({
     cities,
@@ -17,4 +18,5 @@ export default combineReducers({
     reservations,
     reservedFlight,
     ui,
+    user_info,
 });
