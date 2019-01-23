@@ -7,6 +7,7 @@ import '../../../styles/HtfBar.css'
 import '../../../styles/Login.css'
 import { NavLink } from 'react-router-dom'
 import {setFirstStep} from "../../../actions/index";
+import AuthService from "../login-logout/AuthService";
 
 
 export class HtfBar extends React.Component {
@@ -14,8 +15,7 @@ export class HtfBar extends React.Component {
     constructor() {
         super();
         this.state = {};
-
-
+        this.Auth = new AuthService();
     }
 
     render() {
@@ -26,13 +26,16 @@ export class HtfBar extends React.Component {
                        How to Fly <b>#JRocks</b> Airline
                     </Typography>
                     <Button>Main Page</Button>
-                    <Button><NavLink className="notActive" activeClassName="activeLink" to="/reservation//set-parameters">Search for flights</NavLink></Button>
+                    <Button><NavLink className="notActive" activeClassName="activeLink" to="/reservation/set-parameters">Search for flights</NavLink></Button>
                     {/*<Button>Search for flights</Button>*/}
                     <Button>History</Button>
-                    <Button color="primary" variant="outlined">
+                    {this.Auth.loggedIn() ? <Button color="primary" variant="outlined">
+                        <NavLink className="notActive" activeClassName="activeLink" to="/logout">
+                            Logout</NavLink>
+                    </Button> :  <Button color="primary" variant="outlined">
                         <NavLink className="notActive" activeClassName="activeLink" to="/login">
                             Login</NavLink>
-                    </Button>
+                    </Button>}
                 </Toolbar>
             </AppBar>
         );

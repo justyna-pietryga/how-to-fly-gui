@@ -2,13 +2,16 @@ import React from 'react';
 import {connect} from "react-redux";
 import {setFirstStep, itinerateSubmit} from "../actions/index";
 import {Button} from "antd";
+import history from '.././history';
+import AuthService from "./web-structure/login-logout/AuthService";
 
 export class ConfirmReservationComponent extends React.Component {
     constructor() {
         super();
 
         this.state = {};
-        this.onClick = this.onClick.bind(this);
+        // this.onClick = this.onClick.bind(this);
+        this.Auth = new AuthService();
     }
 
     getFlightLegsIds = () => {
@@ -46,27 +49,28 @@ export class ConfirmReservationComponent extends React.Component {
     };
 
     onClick() {
-
-        let url = "http://localhost:8085/api/reservation/";
-        const ids = this.getFlightLegsIds();
-        const result = this.getSpecificReservationForLegIds(ids);
-        ids.forEach(id => {
-            fetch(url+id, {
-                method: "POST",
-                credentials: "same-origin", // include, *same-origin, omit
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(result[id])
+        console.log("here i am");
+        if(!this.Auth.loggedIn()){
+            history.replace('/login');
+        } else{
+            let url = "http://localhost:8085/api/reservation/";
+            const ids = this.getFlightLegsIds();
+            const result = this.getSpecificReservationForLegIds(ids);
+            ids.forEach(id => {
+                this.Auth.fetch(url+id, {
+                    method: "POST",
+                    credentials: "same-origin", // include, *same-origin, omit
+                    body: JSON.stringify(result[id])
+                })
             })
-        })
+        }
     }
 
     render() {
         return (
             <div>
                 <Button style={{marginRight: 4}} type='neutral' onClick={() => this.props.setFirstStep(3)}>Back</Button>
-                <Button style={{marginRight: 4}} type='primary' onClick={this.onClick()}>Confirm</Button>
+                <Button style={{marginRight: 4}} type='primary' onClick={this.onClick.bind(this)}>Confirm</Button>
             </div>
         );
     }
